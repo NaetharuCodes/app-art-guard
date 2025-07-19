@@ -33,8 +33,21 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
   // Define your available themes here
   const availableThemes = [
     { name: "bubblegum", label: "Bubblegum" },
+    {
+      name: "retroarcade",
+      label: "Retro Arcade",
+    },
     { name: "doom", label: "Doom" },
     { name: "darkdoom", label: "Dark Doom" },
+
+    {
+      name: "darkcoffee",
+      label: "Dark Coffee",
+    },
+    {
+      name: "darkamber",
+      label: "Dark Amber",
+    },
   ];
 
   // Load theme from localStorage on mount

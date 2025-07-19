@@ -9,6 +9,7 @@ import {
   LogOut,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { ThemeSwitcher } from "../ThemeSwitcher";
 
 const navigation = [
   { name: "Dashboard", href: "/app/dashboard", icon: LayoutDashboard },
@@ -63,9 +64,9 @@ export function AppLayout() {
                 );
               })}
             </nav>
-
             {/* User section */}
             <div className="flex-shrink-0 px-2 pb-4">
+              <ThemeSwitcher />
               <button className="group flex items-center w-full px-2 py-2 text-sm font-medium text-muted-foreground rounded-md hover:bg-secondary hover:text-foreground">
                 <LogOut className="mr-3 h-5 w-5" />
                 Sign out
