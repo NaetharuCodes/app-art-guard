@@ -20,39 +20,53 @@ import SettingsPage from "./pages/app/SettingsPage";
 
 // Protected route wrapper
 import { ProtectedRoute } from "./components/auth/ProtectedRoute";
+import { ThemeProvider } from "./contexts/ThemeContext";
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        {/* Auth routes */}
-        <Route path="/auth" element={<AuthLayout />}>
-          <Route path="login" element={<LoginPage />} />
-          <Route path="signup" element={<SignupPage />} />
-        </Route>
+    <ThemeProvider defaultTheme="light">
+      <div className="min-h-screen bg-[var(--background)] text-[var(--foreground)]">
+        <Router>
+          <Routes>
+            {/* Auth routes */}
+            <Route path="/auth" element={<AuthLayout />}>
+              <Route path="login" element={<LoginPage />} />
+              <Route path="signup" element={<SignupPage />} />
+            </Route>
 
-        {/* Protected app routes */}
-        <Route
-          path="/app"
-          element={
-            <ProtectedRoute>
-              <AppLayout />
-            </ProtectedRoute>
-          }
-        >
-          <Route path="dashboard" element={<DashboardPage />} />
-          <Route path="portfolio" element={<PortfolioPage />} />
-          <Route path="copyright" element={<CopyrightPage />} />
-          <Route path="commission-flow" element={<CommissionFlowPage />} />
-          <Route path="settings" element={<SettingsPage />} />
-        </Route>
+            {/* Protected app routes */}
+            <Route
+              path="/app"
+              element={
+                <ProtectedRoute>
+                  <AppLayout />
+                </ProtectedRoute>
+              }
+            >
+              <Route path="dashboard" element={<DashboardPage />} />
+              <Route path="portfolio" element={<PortfolioPage />} />
+              <Route path="copyright" element={<CopyrightPage />} />
+              <Route path="commission-flow" element={<CommissionFlowPage />} />
+              <Route path="settings" element={<SettingsPage />} />
+            </Route>
 
-        {/* Redirects */}
-        <Route path="/" element={<Navigate to="/app/dashboard" replace />} />
-        <Route path="/app" element={<Navigate to="/app/dashboard" replace />} />
-        <Route path="/auth" element={<Navigate to="/auth/login" replace />} />
-      </Routes>
-    </Router>
+            {/* Redirects */}
+            <Route
+              path="/"
+              element={<Navigate to="/app/dashboard" replace />}
+            />
+            <Route
+              path="/app"
+              element={<Navigate to="/app/dashboard" replace />}
+            />
+            <Route
+              path="/auth"
+              element={<Navigate to="/auth/login" replace />}
+            />
+          </Routes>
+        </Router>
+      </div>
+    </ThemeProvider>
   );
 }
 
