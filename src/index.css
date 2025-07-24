@@ -321,6 +321,267 @@
   --shadow-2xl: 0px 4px 8px -1px hsl(0 0% 0% / 0.25);
 }
 
+.alexkidd {
+  --background: rgb(135, 206, 235); /* Sky blue like Alex Kidd's world */
+  --foreground: rgb(25, 25, 112); /* Dark blue text */
+  --card: rgb(255, 239, 213); /* Light peachy background */
+  --card-foreground: rgb(25, 25, 112);
+  --popover: rgb(255, 239, 213);
+  --popover-foreground: rgb(25, 25, 112);
+  --primary: rgb(220, 20, 60); /* Bright red like Alex's outfit */
+  --primary-foreground: rgb(255, 255, 255);
+  --secondary: rgb(255, 215, 0); /* Golden yellow */
+  --secondary-foreground: rgb(25, 25, 112);
+  --muted: rgb(176, 224, 230); /* Light blue */
+  --muted-foreground: rgb(25, 25, 112);
+  --accent: rgb(50, 205, 50); /* Bright green */
+  --accent-foreground: rgb(255, 255, 255);
+  --destructive: rgb(255, 69, 0); /* Orange red */
+  --destructive-foreground: rgb(255, 255, 255);
+  --border: rgb(25, 25, 112);
+  --input: rgb(255, 255, 255);
+  --ring: rgb(220, 20, 60);
+  --chart-1: rgb(220, 20, 60);
+  --chart-2: rgb(255, 215, 0);
+  --chart-3: rgb(50, 205, 50);
+  --chart-4: rgb(30, 144, 255);
+  --chart-5: rgb(255, 140, 0);
+  --sidebar: rgb(255, 239, 213);
+  --sidebar-foreground: rgb(25, 25, 112);
+  --sidebar-primary: rgb(220, 20, 60);
+  --sidebar-primary-foreground: rgb(255, 255, 255);
+  --sidebar-accent: rgb(255, 215, 0);
+  --sidebar-accent-foreground: rgb(25, 25, 112);
+  --sidebar-border: rgb(25, 25, 112);
+  --sidebar-ring: rgb(220, 20, 60);
+  --font-sans: "Press Start 2P", monospace; /* 8-bit style font if you have it, otherwise falls back */
+  --font-serif: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+  --font-mono: "Courier New", monospace;
+  --radius: 2px; /* Sharp, pixelated corners */
+  --shadow-2xs: 2px 2px 0px 0px hsl(25 25% 112% / 0.3);
+  --shadow-xs: 2px 2px 0px 0px hsl(25 25% 112% / 0.3);
+  --shadow-sm: 2px 2px 0px 0px hsl(25 25% 112% / 0.5);
+  --shadow: 2px 2px 0px 0px hsl(25 25% 112% / 0.5);
+  --shadow-md: 3px 3px 0px 0px hsl(25 25% 112% / 0.5);
+  --shadow-lg: 4px 4px 0px 0px hsl(25 25% 112% / 0.5);
+  --shadow-xl: 5px 5px 0px 0px hsl(25 25% 112% / 0.5);
+  --shadow-2xl: 6px 6px 0px 0px hsl(25 25% 112% / 0.7);
+  --tracking-normal: 0em;
+  --spacing: 0.25rem;
+}
+
+.softpastels {
+  --background: rgb(252, 250, 255); /* Very soft lavender white */
+  --foreground: rgb(88, 80, 99); /* Soft purple-grey text */
+  --card: rgb(248, 245, 255); /* Barely there lavender */
+  --card-foreground: rgb(88, 80, 99);
+  --popover: rgb(248, 245, 255);
+  --popover-foreground: rgb(88, 80, 99);
+  --primary: rgb(198, 167, 254); /* Soft lavender purple */
+  --primary-foreground: rgb(255, 255, 255);
+  --secondary: rgb(255, 210, 210); /* Soft peachy pink */
+  --secondary-foreground: rgb(88, 80, 99);
+  --muted: rgb(240, 245, 255); /* Very soft blue */
+  --muted-foreground: rgb(120, 113, 134);
+  --accent: rgb(187, 247, 208); /* Soft mint green */
+  --accent-foreground: rgb(88, 80, 99);
+  --destructive: rgb(255, 182, 193); /* Soft pink instead of harsh red */
+  --destructive-foreground: rgb(88, 80, 99);
+  --border: rgb(228, 220, 240); /* Soft lavender border */
+  --input: rgb(255, 255, 255);
+  --ring: rgb(198, 167, 254);
+  --chart-1: rgb(198, 167, 254); /* Soft purple */
+  --chart-2: rgb(255, 210, 210); /* Soft pink */
+  --chart-3: rgb(187, 247, 208); /* Soft mint */
+  --chart-4: rgb(173, 216, 230); /* Soft blue */
+  --chart-5: rgb(255, 239, 153); /* Soft yellow */
+  --sidebar: rgb(248, 245, 255);
+  --sidebar-foreground: rgb(88, 80, 99);
+  --sidebar-primary: rgb(198, 167, 254);
+  --sidebar-primary-foreground: rgb(255, 255, 255);
+  --sidebar-accent: rgb(255, 210, 210);
+  --sidebar-accent-foreground: rgb(88, 80, 99);
+  --sidebar-border: rgb(228, 220, 240);
+  --sidebar-ring: rgb(198, 167, 254);
+  --font-sans: "Inter", sans-serif; /* Clean, soft font */
+  --font-serif: "Crimson Text", serif;
+  --font-mono: "JetBrains Mono", monospace;
+  --radius: 12px; /* Soft, rounded corners */
+  --shadow-2xs: 0px 1px 3px 0px hsl(265 15% 85% / 0.15);
+  --shadow-xs: 0px 1px 3px 0px hsl(265 15% 85% / 0.15);
+  --shadow-sm: 0px 2px 4px 0px hsl(265 15% 85% / 0.2);
+  --shadow: 0px 2px 4px 0px hsl(265 15% 85% / 0.2);
+  --shadow-md: 0px 4px 8px 0px hsl(265 15% 85% / 0.25);
+  --shadow-lg: 0px 8px 16px 0px hsl(265 15% 85% / 0.3);
+  --shadow-xl: 0px 12px 24px 0px hsl(265 15% 85% / 0.35);
+  --shadow-2xl: 0px 16px 32px 0px hsl(265 15% 85% / 0.4);
+  --tracking-normal: 0em;
+  --spacing: 0.25rem;
+}
+
+.starkmono {
+  --background: rgb(0, 0, 0); /* Pure black */
+  --foreground: rgb(255, 255, 255); /* Pure white text */
+  --card: rgb(18, 18, 18); /* Very dark grey */
+  --card-foreground: rgb(255, 255, 255);
+  --popover: rgb(18, 18, 18);
+  --popover-foreground: rgb(255, 255, 255);
+  --primary: rgb(255, 255, 255); /* White primary */
+  --primary-foreground: rgb(0, 0, 0); /* Black text on white */
+  --secondary: rgb(64, 64, 64); /* Medium grey */
+  --secondary-foreground: rgb(255, 255, 255);
+  --muted: rgb(32, 32, 32); /* Dark grey */
+  --muted-foreground: rgb(160, 160, 160); /* Light grey */
+  --accent: rgb(128, 128, 128); /* Medium grey accent */
+  --accent-foreground: rgb(255, 255, 255);
+  --destructive: rgb(220, 220, 220); /* Light grey instead of red */
+  --destructive-foreground: rgb(0, 0, 0);
+  --border: rgb(64, 64, 64); /* Medium grey borders */
+  --input: rgb(32, 32, 32);
+  --ring: rgb(255, 255, 255);
+  --chart-1: rgb(255, 255, 255);
+  --chart-2: rgb(192, 192, 192);
+  --chart-3: rgb(128, 128, 128);
+  --chart-4: rgb(96, 96, 96);
+  --chart-5: rgb(64, 64, 64);
+  --sidebar: rgb(8, 8, 8);
+  --sidebar-foreground: rgb(255, 255, 255);
+  --sidebar-primary: rgb(255, 255, 255);
+  --sidebar-primary-foreground: rgb(0, 0, 0);
+  --sidebar-accent: rgb(128, 128, 128);
+  --sidebar-accent-foreground: rgb(255, 255, 255);
+  --sidebar-border: rgb(64, 64, 64);
+  --sidebar-ring: rgb(255, 255, 255);
+  --font-sans: "Space Grotesk", sans-serif; /* Modern, geometric font */
+  --font-serif: "IBM Plex Serif", serif;
+  --font-mono: "IBM Plex Mono", monospace;
+  --radius: 0px; /* Sharp, brutal edges */
+  --shadow-2xs: 0px 1px 2px 0px hsl(0 0% 0% / 0.8);
+  --shadow-xs: 0px 1px 2px 0px hsl(0 0% 0% / 0.8);
+  --shadow-sm: 0px 2px 4px 0px hsl(0 0% 0% / 0.9);
+  --shadow: 0px 2px 4px 0px hsl(0 0% 0% / 0.9);
+  --shadow-md: 0px 4px 8px 0px hsl(0 0% 0% / 1);
+  --shadow-lg: 0px 8px 16px 0px hsl(0 0% 0% / 1);
+  --shadow-xl: 0px 12px 24px 0px hsl(0 0% 0% / 1);
+  --shadow-2xl: 0px 16px 32px 0px hsl(0 0% 0% / 1);
+  --tracking-normal: 0.02em; /* Slightly spaced for that modern feel */
+  --spacing: 0.25rem;
+}
+
+.cyberpink {
+  --background: rgb(10, 5, 20); /* Deep dark purple-black */
+  --foreground: rgb(255, 20, 147); /* Hot pink text */
+  --card: rgb(20, 10, 30); /* Dark purple card */
+  --card-foreground: rgb(255, 182, 193); /* Light pink */
+  --popover: rgb(20, 10, 30);
+  --popover-foreground: rgb(255, 182, 193);
+  --primary: rgb(255, 20, 147); /* Electric hot pink */
+  --primary-foreground: rgb(0, 0, 0);
+  --secondary: rgb(0, 255, 255); /* Electric cyan */
+  --secondary-foreground: rgb(0, 0, 0);
+  --muted: rgb(40, 20, 60); /* Dark purple muted */
+  --muted-foreground: rgb(180, 130, 200); /* Light purple */
+  --accent: rgb(57, 255, 20); /* Electric green */
+  --accent-foreground: rgb(0, 0, 0);
+  --destructive: rgb(255, 0, 100); /* Bright magenta */
+  --destructive-foreground: rgb(255, 255, 255);
+  --border: rgb(255, 20, 147); /* Hot pink borders */
+  --input: rgb(30, 15, 45);
+  --ring: rgb(255, 20, 147);
+  --chart-1: rgb(255, 20, 147); /* Hot pink */
+  --chart-2: rgb(0, 255, 255); /* Cyan */
+  --chart-3: rgb(57, 255, 20); /* Electric green */
+  --chart-4: rgb(138, 43, 226); /* Electric purple */
+  --chart-5: rgb(255, 215, 0); /* Electric gold */
+  --sidebar: rgb(15, 7, 25);
+  --sidebar-foreground: rgb(255, 182, 193);
+  --sidebar-primary: rgb(255, 20, 147);
+  --sidebar-primary-foreground: rgb(0, 0, 0);
+  --sidebar-accent: rgb(0, 255, 255);
+  --sidebar-accent-foreground: rgb(0, 0, 0);
+  --sidebar-border: rgb(255, 20, 147);
+  --sidebar-ring: rgb(255, 20, 147);
+  --font-sans: "Orbitron", sans-serif; /* Futuristic font */
+  --font-serif: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+  --font-mono: "Share Tech Mono", monospace;
+  --radius: 4px; /* Slight rounding for that tech feel */
+  --shadow-2xs: 0px 0px 5px 0px hsl(328 100% 54% / 0.3),
+    0px 0px 10px 0px hsl(328 100% 54% / 0.1);
+  --shadow-xs: 0px 0px 5px 0px hsl(328 100% 54% / 0.3),
+    0px 0px 10px 0px hsl(328 100% 54% / 0.1);
+  --shadow-sm: 0px 0px 8px 0px hsl(328 100% 54% / 0.4),
+    0px 0px 15px 0px hsl(328 100% 54% / 0.2);
+  --shadow: 0px 0px 8px 0px hsl(328 100% 54% / 0.4),
+    0px 0px 15px 0px hsl(328 100% 54% / 0.2);
+  --shadow-md: 0px 0px 12px 0px hsl(328 100% 54% / 0.5),
+    0px 0px 20px 0px hsl(328 100% 54% / 0.3);
+  --shadow-lg: 0px 0px 15px 0px hsl(328 100% 54% / 0.6),
+    0px 0px 25px 0px hsl(328 100% 54% / 0.4);
+  --shadow-xl: 0px 0px 20px 0px hsl(328 100% 54% / 0.7),
+    0px 0px 35px 0px hsl(328 100% 54% / 0.5);
+  --shadow-2xl: 0px 0px 30px 0px hsl(328 100% 54% / 0.8),
+    0px 0px 50px 0px hsl(328 100% 54% / 0.6);
+  --tracking-normal: 0.025em; /* Slightly spaced for that digital feel */
+  --spacing: 0.25rem;
+}
+
+.cyberblue {
+  --background: rgb(5, 10, 20); /* Deep dark blue-black */
+  --foreground: rgb(0, 255, 255); /* Electric cyan text */
+  --card: rgb(10, 20, 30); /* Dark blue card */
+  --card-foreground: rgb(173, 216, 230); /* Light cyan */
+  --popover: rgb(10, 20, 30);
+  --popover-foreground: rgb(173, 216, 230);
+  --primary: rgb(0, 255, 255); /* Electric cyan */
+  --primary-foreground: rgb(0, 0, 0);
+  --secondary: rgb(0, 191, 255); /* Deep sky blue */
+  --secondary-foreground: rgb(0, 0, 0);
+  --muted: rgb(20, 40, 60); /* Dark blue muted */
+  --muted-foreground: rgb(135, 206, 235); /* Sky blue */
+  --accent: rgb(57, 255, 20); /* Electric green accent */
+  --accent-foreground: rgb(0, 0, 0);
+  --destructive: rgb(255, 69, 0); /* Orange red for contrast */
+  --destructive-foreground: rgb(255, 255, 255);
+  --border: rgb(0, 255, 255); /* Cyan borders */
+  --input: rgb(15, 30, 45);
+  --ring: rgb(0, 255, 255);
+  --chart-1: rgb(0, 255, 255); /* Electric cyan */
+  --chart-2: rgb(0, 191, 255); /* Deep sky blue */
+  --chart-3: rgb(30, 144, 255); /* Dodger blue */
+  --chart-4: rgb(100, 149, 237); /* Cornflower blue */
+  --chart-5: rgb(255, 255, 255); /* White accent */
+  --sidebar: rgb(7, 15, 25);
+  --sidebar-foreground: rgb(173, 216, 230);
+  --sidebar-primary: rgb(0, 255, 255);
+  --sidebar-primary-foreground: rgb(0, 0, 0);
+  --sidebar-accent: rgb(0, 191, 255);
+  --sidebar-accent-foreground: rgb(0, 0, 0);
+  --sidebar-border: rgb(0, 255, 255);
+  --sidebar-ring: rgb(0, 255, 255);
+  --font-sans: "Orbitron", sans-serif; /* Futuristic font */
+  --font-serif: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+  --font-mono: "Share Tech Mono", monospace;
+  --radius: 4px; /* Slight rounding for that tech feel */
+  --shadow-2xs: 0px 0px 5px 0px hsl(180 100% 50% / 0.3),
+    0px 0px 10px 0px hsl(180 100% 50% / 0.1);
+  --shadow-xs: 0px 0px 5px 0px hsl(180 100% 50% / 0.3),
+    0px 0px 10px 0px hsl(180 100% 50% / 0.1);
+  --shadow-sm: 0px 0px 8px 0px hsl(180 100% 50% / 0.4),
+    0px 0px 15px 0px hsl(180 100% 50% / 0.2);
+  --shadow: 0px 0px 8px 0px hsl(180 100% 50% / 0.4),
+    0px 0px 15px 0px hsl(180 100% 50% / 0.2);
+  --shadow-md: 0px 0px 12px 0px hsl(180 100% 50% / 0.5),
+    0px 0px 20px 0px hsl(180 100% 50% / 0.3);
+  --shadow-lg: 0px 0px 15px 0px hsl(180 100% 50% / 0.6),
+    0px 0px 25px 0px hsl(180 100% 50% / 0.4);
+  --shadow-xl: 0px 0px 20px 0px hsl(180 100% 50% / 0.7),
+    0px 0px 35px 0px hsl(180 100% 50% / 0.5);
+  --shadow-2xl: 0px 0px 30px 0px hsl(180 100% 50% / 0.8),
+    0px 0px 50px 0px hsl(180 100% 50% / 0.6);
+  --tracking-normal: 0.025em; /* Slightly spaced for that digital feel */
+  --spacing: 0.25rem;
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);

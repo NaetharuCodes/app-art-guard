@@ -61,7 +61,7 @@ const PortfolioPage = () => {
         <div>
           <h1 className="text-3xl font-bold text-foreground">Portfolio</h1>
           <p className="text-muted-foreground mt-2">
-            Curate up to 10 pieces that best showcase your artistic capabilities
+            Curate up to 12 pieces that best showcase your artistic capabilities
           </p>
         </div>
         <div className="flex gap-3">
@@ -146,101 +146,113 @@ const PortfolioPage = () => {
         </CardContent>
       </Card>
 
-      {/* Portfolio Grid */}
+      {/* Portfolio Grid - All 12 positions */}
       <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-        {portfolioItems.map((item) => (
-          <Card key={item.id} className="overflow-hidden group">
-            <div className="relative">
-              {/* Image placeholder */}
-              <div className="aspect-[4/5] bg-muted flex items-center justify-center">
-                <img
-                  className="text-muted-foreground"
-                  src={item.artwork.image_url}
-                />
-              </div>
+        {Array.from({ length: 12 }).map((_, index) => {
+          const position = index + 1;
+          const portfolioItem = portfolioItems.find(
+            (item) => item.position === position
+          );
 
-              {/* Hover actions */}
-              <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                <div className="flex gap-1">
-                  <Button size="sm" variant="secondary" className="h-8 w-8 p-0">
-                    <Eye className="h-4 w-4" />
-                  </Button>
-                  <Button size="sm" variant="secondary" className="h-8 w-8 p-0">
-                    <Edit3 className="h-4 w-4" />
-                  </Button>
-                  <Button
-                    size="sm"
-                    variant="destructive"
-                    className="h-8 w-8 p-0"
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
-                </div>
-              </div>
-            </div>
-
-            <CardContent className="p-4">
-              <div className="space-y-3">
-                {/* Title and medium */}
-                <div>
-                  <h3 className="font-semibold text-foreground">
-                    {item.artwork.title}
-                  </h3>
-                  <p className="text-sm text-muted-foreground">
-                    {item.artwork.medium} • {item.artwork.software}
-                  </p>
-                </div>
-
-                {/* Description */}
-                <p className="text-sm text-muted-foreground line-clamp-3">
-                  {item.artwork.description}
-                </p>
-
-                {/* Notes preview */}
-                {item.artwork.notes && (
-                  <div className="pt-2 border-t border-border">
-                    <p className="text-xs text-muted-foreground font-medium mb-1">
-                      Artist Notes:
-                    </p>
-                    <p className="text-xs text-muted-foreground line-clamp-2">
-                      {item.artwork.notes}
-                    </p>
-                  </div>
-                )}
-
-                {/* Footer */}
-                <div className="flex items-center justify-between pt-2 text-xs text-muted-foreground">
-                  <span>Added {item.artwork.created_at}</span>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="h-auto p-0 text-xs"
-                  >
-                    View Details
-                  </Button>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-
-      {/* Empty slots */}
-      {portfolioItems.length < 10 && (
-        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-          {Array.from({ length: 12 - portfolioItems.length }).map(
-            (_, index) => (
+          if (portfolioItem) {
+            // Show existing portfolio item
+            return (
               <Card
-                key={`empty-${index}`}
-                className="border-2 border-dashed border-border"
+                key={portfolioItem.id}
+                className="overflow-hidden group flex flex-col h-full"
               >
-                <CardContent className="p-8">
+                <div className="relative flex-shrink-0">
+                  {/* Image */}
+                  <div className="aspect-[4/5] bg-muted flex items-center justify-center">
+                    <img
+                      className="w-full h-full object-cover"
+                      src={portfolioItem.artwork.image_variants.medium}
+                      alt={portfolioItem.artwork.title}
+                    />
+                  </div>
+
+                  {/* Hover actions */}
+                  <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <div className="flex gap-1">
+                      <Button
+                        size="sm"
+                        variant="secondary"
+                        className="h-8 w-8 p-0"
+                      >
+                        <Eye className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="secondary"
+                        className="h-8 w-8 p-0"
+                      >
+                        <Edit3 className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="destructive"
+                        className="h-8 w-8 p-0"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+
+                <CardContent className="p-4 flex-1 flex flex-col justify-end">
+                  <div className="space-y-3">
+                    {/* Title and software */}
+                    <div>
+                      <h3 className="font-semibold text-foreground">
+                        {portfolioItem.artwork.title}
+                      </h3>
+                      <p className="text-sm text-muted-foreground">
+                        {portfolioItem.artwork.format} •{" "}
+                        {portfolioItem.artwork.software}
+                      </p>
+                    </div>
+
+                    {/* Description */}
+                    {portfolioItem.artwork.description && (
+                      <p className="text-sm text-muted-foreground line-clamp-3">
+                        {portfolioItem.artwork.description}
+                      </p>
+                    )}
+
+                    {/* Footer */}
+                    <div className="flex items-center justify-between pt-2 text-xs text-muted-foreground">
+                      <span>
+                        Added{" "}
+                        {new Date(
+                          portfolioItem.created_at
+                        ).toLocaleDateString()}
+                      </span>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-auto p-0 text-xs"
+                      >
+                        View Details
+                      </Button>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            );
+          } else {
+            // Show empty slot
+            return (
+              <Card
+                key={`empty-${position}`}
+                className="border-2 border-dashed border-border flex flex-col h-full"
+              >
+                <CardContent className="p-8 flex-1 flex flex-col justify-center">
                   <div className="text-center">
                     <div className="w-16 h-16 bg-muted rounded-lg flex items-center justify-center mx-auto mb-3">
                       <Plus className="h-8 w-8 text-muted-foreground" />
                     </div>
                     <p className="text-sm text-muted-foreground mb-3">
-                      Empty slot
+                      Position {position}
                     </p>
                     <Button variant="outline" size="sm">
                       Add Artwork
@@ -248,10 +260,10 @@ const PortfolioPage = () => {
                   </div>
                 </CardContent>
               </Card>
-            )
-          )}
-        </div>
-      )}
+            );
+          }
+        })}
+      </div>
     </div>
   );
 };

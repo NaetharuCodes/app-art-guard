@@ -48,6 +48,26 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
       name: "darkamber",
       label: "Dark Amber",
     },
+    {
+      name: "alexkidd",
+      label: "Alex Kidd",
+    },
+    {
+      name: "softpastels",
+      label: "Soft Pastel",
+    },
+    {
+      name: "starkmono",
+      label: "Stark Dark",
+    },
+    {
+      name: "cyberpink",
+      label: "Cyberpunk Dark",
+    },
+    {
+      name: "cyberblue",
+      label: "Cyberpunk Cyan",
+    },
   ];
 
   // Load theme from localStorage on mount
