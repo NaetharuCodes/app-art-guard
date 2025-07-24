@@ -440,19 +440,10 @@ const CopyrightPage = () => {
                   className="flex items-center gap-4 p-4 border border-border rounded-lg hover:bg-muted/50 transition-colors"
                 >
                   {/* Thumbnail */}
-                  <div className="w-16 h-16 bg-muted rounded-lg flex items-center justify-center flex-shrink-0">
+                  <div className="w-16 h-16 bg-muted rounded-lg flex items-center justify-center flex-shrink-0 overflow-hidden">
                     <img
-                      src={artworkService.getFileUrl(artwork.id)}
+                      src={artwork.image_variants.thumbnail}
                       alt={artwork.title}
-                      className="w-full h-full object-cover rounded-lg"
-                      onError={(e) => {
-                        e.currentTarget.style.display = "none";
-                        const fallback =
-                          e.currentTarget.parentElement?.querySelector(
-                            ".fallback-icon"
-                          ) as HTMLElement;
-                        if (fallback) fallback.style.display = "flex";
-                      }}
                     />
                     <ImageIcon
                       className="h-8 w-8 text-muted-foreground fallback-icon"
@@ -532,7 +523,7 @@ const CopyrightPage = () => {
                             className="h-8 w-8 p-0"
                             onClick={() =>
                               window.open(
-                                artworkService.getFileUrl(artwork.id),
+                                artworkService.getFileUrl(artwork),
                                 "_blank"
                               )
                             }

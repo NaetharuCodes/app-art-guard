@@ -15,7 +15,6 @@ export interface Artwork {
   description: string;
   filename: string;
   cloudflare_image_id: string;
-  image_variants: string;
   file_path: string;
   file_size: number;
   width: number;
@@ -26,6 +25,13 @@ export interface Artwork {
   tags: string;
   copyright_registered: boolean;
   ai_protection_enabled: boolean;
+  image_url: string;
+  image_variants: {
+    thumbnail: string;
+    medium: string;
+    large: string;
+    original: string;
+  };
   created_at: string;
   updated_at: string;
 }
