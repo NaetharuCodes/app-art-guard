@@ -8,60 +8,52 @@ import {
   ExternalLink,
   ImageIcon,
 } from "lucide-react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-
-// Mock portfolio data
-const portfolioItems = [
-  {
-    id: 1,
-    title: "Digital Portrait Study",
-    medium: "Digital Art",
-    software: "Procreate",
-    description:
-      "A character portrait created using pencil brushes in Procreate. This piece demonstrates my ability to capture emotion and personality through facial expressions and lighting.",
-    notes:
-      "I specialize in realistic portraits with a focus on dramatic lighting. Can work in various styles from photorealistic to stylized illustrations.",
-    imageUrl: "/api/placeholder/300/400",
-    tags: ["Portrait", "Digital", "Character Design"],
-    createdAt: "2 days ago",
-  },
-  {
-    id: 2,
-    title: "Fantasy Landscape",
-    medium: "Digital Painting",
-    software: "Photoshop",
-    description:
-      "An environment concept piece showing a mystical forest clearing. Created for a fantasy game concept, showcasing atmospheric lighting and detailed foliage work.",
-    notes:
-      "I excel at creating immersive environments with strong mood and atmosphere. Experience with both realistic and stylized approaches.",
-    imageUrl: "/api/placeholder/400/300",
-    tags: ["Environment", "Concept Art", "Fantasy"],
-    createdAt: "1 week ago",
-  },
-  {
-    id: 3,
-    title: "Character Design Sheet",
-    medium: "Digital Illustration",
-    software: "Clip Studio Paint",
-    description:
-      "Complete character turnaround and expression sheet for an animated series. Shows my process for developing consistent, appealing character designs.",
-    notes:
-      "Strong foundation in character design principles, anatomy, and creating designs that work for animation production pipelines.",
-    imageUrl: "/api/placeholder/350/450",
-    tags: ["Character Design", "Animation", "Reference"],
-    createdAt: "2 weeks ago",
-  },
-];
+import { useEffect, useState } from "react";
+import {
+  artworkService,
+  portfolioService,
+  type Artwork,
+  type Portfolio,
+} from "@/services/api";
 
 const PortfolioPage = () => {
+  const [portfolioItems, setPortfolioItems] = useState<Portfolio[]>([]);
+  const [availableArtworks, setAvailableArtworks] = useState<Artwork[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    fetchPortfolioData();
+  }, []);
+
+  const fetchPortfolioData = async () => {
+    try {
+      const [portfolioData, artworksData] = await Promise.all([
+        portfolioService.getPortfolio(),
+        artworkService.getAll(),
+      ]);
+      setPortfolioItems(portfolioData.portfolio);
+      setAvailableArtworks(artworksData.artworks);
+    } catch (error) {
+      console.error("Error fetching portfolio data:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <div className="space-y-6">
+        <div className="text-center py-8">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Loading portfolio...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -108,9 +100,11 @@ const PortfolioPage = () => {
               <Share2 className="h-8 w-8 text-primary" />
               <div>
                 <p className="text-sm font-medium text-muted-foreground">
-                  Portfolio Views
+                  Available Artworks
                 </p>
-                <p className="text-xl font-bold text-foreground">247</p>
+                <p className="text-xl font-bold text-foreground">
+                  {availableArtworks.length}
+                </p>
               </div>
             </div>
           </CardContent>
@@ -122,9 +116,11 @@ const PortfolioPage = () => {
               <ExternalLink className="h-8 w-8 text-primary" />
               <div>
                 <p className="text-sm font-medium text-muted-foreground">
-                  Shared Links
+                  Empty Slots
                 </p>
-                <p className="text-xl font-bold text-foreground">12</p>
+                <p className="text-xl font-bold text-foreground">
+                  {12 - portfolioItems.length}
+                </p>
               </div>
             </div>
           </CardContent>
@@ -157,7 +153,10 @@ const PortfolioPage = () => {
             <div className="relative">
               {/* Image placeholder */}
               <div className="aspect-[4/5] bg-muted flex items-center justify-center">
-                <ImageIcon className="h-16 w-16 text-muted-foreground" />
+                <img
+                  className="h-16 w-16 text-muted-foreground"
+                  src={item.artwork.image_url}
+                />
               </div>
 
               {/* Hover actions */}
@@ -185,42 +184,33 @@ const PortfolioPage = () => {
                 {/* Title and medium */}
                 <div>
                   <h3 className="font-semibold text-foreground">
-                    {item.title}
+                    {item.artwork.title}
                   </h3>
                   <p className="text-sm text-muted-foreground">
-                    {item.medium} • {item.software}
+                    {item.artwork.medium} • {item.artwork.software}
                   </p>
-                </div>
-
-                {/* Tags */}
-                <div className="flex flex-wrap gap-1">
-                  {item.tags.map((tag) => (
-                    <Badge key={tag} variant="secondary" className="text-xs">
-                      {tag}
-                    </Badge>
-                  ))}
                 </div>
 
                 {/* Description */}
                 <p className="text-sm text-muted-foreground line-clamp-3">
-                  {item.description}
+                  {item.artwork.description}
                 </p>
 
                 {/* Notes preview */}
-                {item.notes && (
+                {item.artwork.notes && (
                   <div className="pt-2 border-t border-border">
                     <p className="text-xs text-muted-foreground font-medium mb-1">
                       Artist Notes:
                     </p>
                     <p className="text-xs text-muted-foreground line-clamp-2">
-                      {item.notes}
+                      {item.artwork.notes}
                     </p>
                   </div>
                 )}
 
                 {/* Footer */}
                 <div className="flex items-center justify-between pt-2 text-xs text-muted-foreground">
-                  <span>Added {item.createdAt}</span>
+                  <span>Added {item.artwork.created_at}</span>
                   <Button
                     variant="ghost"
                     size="sm"

@@ -22,7 +22,9 @@ export interface Artwork {
   format: string;
   mime_type: string;
   software: string;
-  tags: string;
+  medium: string;
+  tags: string[];
+  notes: string;
   copyright_registered: boolean;
   ai_protection_enabled: boolean;
   image_url: string;
@@ -122,27 +124,24 @@ export const artworkService = {
 };
 
 export const portfolioService = {
-  async getPortfolio(portfolioName = "Main Portfolio"): Promise<Portfolio[]> {
-    const response = await fetch(
-      `${API_BASE}/api/portfolio?name=${portfolioName}`,
-      {
-        headers: getAuthHeaders(),
-      }
-    );
+  async getPortfolio(): Promise<{ portfolio: Portfolio[]; count: number }> {
+    const response = await fetch(`${API_BASE}/api/portfolio`, {
+      headers: getAuthHeaders(),
+    });
     if (!response.ok) throw new Error("Failed to fetch portfolio");
     return response.json();
   },
 
   async addToPortfolio(
     artworkId: number,
-    portfolioName = "Main Portfolio"
-  ): Promise<Portfolio> {
+    position: number
+  ): Promise<{ message: string; portfolio_item: Portfolio }> {
     const response = await fetch(`${API_BASE}/api/portfolio`, {
       method: "POST",
       headers: getAuthHeaders(),
       body: JSON.stringify({
         artwork_id: artworkId,
-        portfolio_name: portfolioName,
+        position: position,
       }),
     });
     if (!response.ok) throw new Error("Failed to add to portfolio");
@@ -150,22 +149,12 @@ export const portfolioService = {
   },
 
   async removeFromPortfolio(portfolioId: number): Promise<{ message: string }> {
+    // We'll build this endpoint later
     const response = await fetch(`${API_BASE}/api/portfolio/${portfolioId}`, {
       method: "DELETE",
       headers: getAuthHeaders(),
     });
     if (!response.ok) throw new Error("Failed to remove from portfolio");
     return response.json();
-  },
-
-  async reorderPortfolio(
-    portfolioItems: { id: number; position: number }[]
-  ): Promise<void> {
-    const response = await fetch(`${API_BASE}/api/portfolio/reorder`, {
-      method: "PUT",
-      headers: getAuthHeaders(),
-      body: JSON.stringify({ items: portfolioItems }),
-    });
-    if (!response.ok) throw new Error("Failed to reorder portfolio");
   },
 };
