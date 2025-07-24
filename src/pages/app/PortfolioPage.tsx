@@ -154,7 +154,7 @@ const PortfolioPage = () => {
               {/* Image placeholder */}
               <div className="aspect-[4/5] bg-muted flex items-center justify-center">
                 <img
-                  className="h-16 w-16 text-muted-foreground"
+                  className="text-muted-foreground"
                   src={item.artwork.image_url}
                 />
               </div>
