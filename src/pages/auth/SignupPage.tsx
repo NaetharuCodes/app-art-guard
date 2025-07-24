@@ -10,7 +10,7 @@ import {
   CheckCircle,
 } from "lucide-react";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   Card,
   CardContent,
@@ -20,10 +20,63 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useAuth } from "../../contexts/AuthContext";
 
 const SignupPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+  });
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+
+  const { register } = useAuth();
+  const navigate = useNavigate();
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+    setError("");
+    setSuccess("");
+
+    // Basic validation
+    if (formData.password !== formData.confirmPassword) {
+      setError("Passwords do not match");
+      setIsLoading(false);
+      return;
+    }
+
+    if (formData.password.length < 6) {
+      setError("Password must be at least 6 characters long");
+      setIsLoading(false);
+      return;
+    }
+
+    try {
+      await register(formData.name, formData.email, formData.password);
+      setSuccess("Account created successfully! Please log in.");
+      // Redirect to login after a short delay
+      setTimeout(() => {
+        navigate("/auth/login");
+      }, 2000);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Registration failed");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <div className="w-full max-w-md mx-auto">
@@ -62,8 +115,22 @@ const SignupPage = () => {
             </div>
           </div>
 
+          {/* Success Message */}
+          {success && (
+            <div className="p-3 text-sm text-green-600 bg-green-50 border border-green-200 rounded-md">
+              {success}
+            </div>
+          )}
+
+          {/* Error Message */}
+          {error && (
+            <div className="p-3 text-sm text-red-600 bg-red-50 border border-red-200 rounded-md">
+              {error}
+            </div>
+          )}
+
           {/* Signup Form */}
-          <form className="space-y-4">
+          <form className="space-y-4" onSubmit={handleSubmit}>
             {/* Name Field */}
             <div className="space-y-2">
               <label
@@ -76,9 +143,12 @@ const SignupPage = () => {
                 <User className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
                   id="name"
+                  name="name"
                   type="text"
                   placeholder="Your full name"
                   className="pl-9"
+                  value={formData.name}
+                  onChange={handleInputChange}
                   required
                 />
               </div>
@@ -96,9 +166,12 @@ const SignupPage = () => {
                 <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
                   id="email"
+                  name="email"
                   type="email"
                   placeholder="you@example.com"
                   className="pl-9"
+                  value={formData.email}
+                  onChange={handleInputChange}
                   required
                 />
               </div>
@@ -116,9 +189,12 @@ const SignupPage = () => {
                 <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
                   id="password"
+                  name="password"
                   type={showPassword ? "text" : "password"}
                   placeholder="Create a strong password"
                   className="pl-9 pr-9"
+                  value={formData.password}
+                  onChange={handleInputChange}
                   required
                 />
                 <button
@@ -147,9 +223,12 @@ const SignupPage = () => {
                 <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
                   id="confirmPassword"
+                  name="confirmPassword"
                   type={showConfirmPassword ? "text" : "password"}
                   placeholder="Confirm your password"
                   className="pl-9 pr-9"
+                  value={formData.confirmPassword}
+                  onChange={handleInputChange}
                   required
                 />
                 <button
@@ -170,15 +249,33 @@ const SignupPage = () => {
             <div className="text-xs text-muted-foreground space-y-1">
               <p className="font-medium">Password must contain:</p>
               <div className="flex items-center gap-2">
-                <CheckCircle className="h-3 w-3 text-green-600" />
-                <span>At least 8 characters</span>
+                <CheckCircle
+                  className={`h-3 w-3 ${
+                    formData.password.length >= 6
+                      ? "text-green-600"
+                      : "text-muted-foreground"
+                  }`}
+                />
+                <span>At least 6 characters</span>
               </div>
               <div className="flex items-center gap-2">
-                <CheckCircle className="h-3 w-3 text-muted-foreground" />
+                <CheckCircle
+                  className={`h-3 w-3 ${
+                    /[A-Z]/.test(formData.password)
+                      ? "text-green-600"
+                      : "text-muted-foreground"
+                  }`}
+                />
                 <span>One uppercase letter</span>
               </div>
               <div className="flex items-center gap-2">
-                <CheckCircle className="h-3 w-3 text-muted-foreground" />
+                <CheckCircle
+                  className={`h-3 w-3 ${
+                    /[0-9!@#$%^&*]/.test(formData.password)
+                      ? "text-green-600"
+                      : "text-muted-foreground"
+                  }`}
+                />
                 <span>One number or special character</span>
               </div>
             </div>
@@ -218,9 +315,9 @@ const SignupPage = () => {
             </div>
 
             {/* Create Account Button */}
-            <Button type="submit" className="w-full">
-              Create Account
-              <ArrowRight className="h-4 w-4 ml-2" />
+            <Button type="submit" className="w-full" disabled={isLoading}>
+              {isLoading ? "Creating Account..." : "Create Account"}
+              {!isLoading && <ArrowRight className="h-4 w-4 ml-2" />}
             </Button>
           </form>
 

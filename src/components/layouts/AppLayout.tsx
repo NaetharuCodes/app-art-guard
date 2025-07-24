@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ThemeSwitcher } from "../ThemeSwitcher";
+import { useAuth } from "@/contexts/AuthContext";
 
 const navigation = [
   { name: "Dashboard", href: "/app/dashboard", icon: LayoutDashboard },
@@ -21,6 +22,12 @@ const navigation = [
 
 export function AppLayout() {
   const location = useLocation();
+  const { logout } = useAuth();
+
+  const handleLogout = () => {
+    logout();
+    // Navigation will be handled automatically by ProtectedRoute
+  };
 
   return (
     <div className="flex h-screen bg-background">
@@ -67,7 +74,10 @@ export function AppLayout() {
             {/* User section */}
             <div className="flex-shrink-0 px-2 pb-4">
               <ThemeSwitcher />
-              <button className="group flex items-center w-full px-2 py-2 text-sm font-medium text-muted-foreground rounded-md hover:bg-secondary hover:text-foreground">
+              <button
+                className="group flex items-center w-full px-2 py-2 text-sm font-medium text-muted-foreground rounded-md hover:bg-secondary hover:text-foreground"
+                onClick={handleLogout}
+              >
                 <LogOut className="mr-3 h-5 w-5" />
                 Sign out
               </button>
