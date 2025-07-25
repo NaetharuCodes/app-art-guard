@@ -1,6 +1,10 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+button {
+  cursor: pointer;
+}
+
 :root {
   --background: rgb(246, 230, 238);
   --foreground: rgb(91, 91, 91);

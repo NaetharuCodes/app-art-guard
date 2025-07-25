@@ -26,7 +26,7 @@ interface ThemeProviderProps {
 
 export const ThemeProvider: React.FC<ThemeProviderProps> = ({
   children,
-  defaultTheme = "light",
+  defaultTheme = "bubblegum",
 }) => {
   const [theme, setThemeState] = useState<Theme>(defaultTheme);
 
@@ -74,7 +74,8 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
   useEffect(() => {
     const savedTheme = localStorage.getItem("art-guard-theme");
     if (savedTheme && availableThemes.some((t) => t.name === savedTheme)) {
-      setThemeState(savedTheme);
+      console.log(savedTheme);
+      setTheme(savedTheme);
     }
   }, []);
 
@@ -94,11 +95,6 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
     setThemeState(newTheme);
     localStorage.setItem("art-guard-theme", newTheme);
   };
-
-  // Apply initial theme
-  useEffect(() => {
-    setTheme(theme);
-  }, [theme]);
 
   const value = {
     theme,

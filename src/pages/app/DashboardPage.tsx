@@ -158,8 +158,8 @@ const DashboardPage = () => {
           <CardContent>
             <div className="space-y-4">
               <div className="flex items-start gap-3">
-                <div className="bg-green-100 rounded-full p-2">
-                  <FileText className="h-4 w-4 text-green-600" />
+                <div className="bg-primary/10 rounded-full p-2">
+                  <FileText className="h-4 w-4 text-primary" />
                 </div>
                 <div className="flex-1">
                   <p className="text-sm font-medium text-foreground">
@@ -172,8 +172,8 @@ const DashboardPage = () => {
               </div>
 
               <div className="flex items-start gap-3">
-                <div className="bg-blue-100 rounded-full p-2">
-                  <Workflow className="h-4 w-4 text-blue-600" />
+                <div className="bg-secondary/10 rounded-full p-2">
+                  <Workflow className="h-4 w-4 text-secondary-foreground" />
                 </div>
                 <div className="flex-1">
                   <p className="text-sm font-medium text-foreground">
@@ -186,8 +186,8 @@ const DashboardPage = () => {
               </div>
 
               <div className="flex items-start gap-3">
-                <div className="bg-purple-100 rounded-full p-2">
-                  <Image className="h-4 w-4 text-purple-600" />
+                <div className="bg-accent/10 rounded-full p-2">
+                  <Image className="h-4 w-4 text-accent-foreground" />
                 </div>
                 <div className="flex-1">
                   <p className="text-sm font-medium text-foreground">
@@ -200,8 +200,8 @@ const DashboardPage = () => {
               </div>
 
               <div className="flex items-start gap-3">
-                <div className="bg-orange-100 rounded-full p-2">
-                  <Users className="h-4 w-4 text-orange-600" />
+                <div className="bg-muted rounded-full p-2">
+                  <Users className="h-4 w-4 text-muted-foreground" />
                 </div>
                 <div className="flex-1">
                   <p className="text-sm font-medium text-foreground">
@@ -223,64 +223,51 @@ const DashboardPage = () => {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              <div className="flex items-center justify-between p-3 bg-green-50 rounded-lg border border-green-200">
+              <div className="flex items-center justify-between p-3 bg-primary/5 rounded-lg border border-primary/20">
                 <div className="flex items-center gap-3">
-                  <Shield className="h-5 w-5 text-green-600" />
+                  <Shield className="h-5 w-5 text-primary" />
                   <div>
-                    <p className="text-sm font-medium text-green-800">
+                    <p className="text-sm font-medium text-primary">
                       Anti-Scraping Active
                     </p>
-                    <p className="text-xs text-green-600">
+                    <p className="text-xs text-primary/70">
                       All portfolio images protected
                     </p>
                   </div>
                 </div>
-                <Badge
-                  variant="secondary"
-                  className="bg-green-100 text-green-700"
-                >
-                  Active
-                </Badge>
+                <Badge variant="secondary">Active</Badge>
               </div>
 
-              <div className="flex items-center justify-between p-3 bg-blue-50 rounded-lg border border-blue-200">
+              <div className="flex items-center justify-between p-3 bg-secondary/5 rounded-lg border border-secondary/20">
                 <div className="flex items-center gap-3">
-                  <FileText className="h-5 w-5 text-blue-600" />
+                  <FileText className="h-5 w-5 text-secondary-foreground" />
                   <div>
-                    <p className="text-sm font-medium text-blue-800">
+                    <p className="text-sm font-medium text-secondary-foreground">
                       Takedown Requests
                     </p>
-                    <p className="text-xs text-blue-600">
+                    <p className="text-xs text-secondary-foreground/70">
                       12 submitted this month
                     </p>
                   </div>
                 </div>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="text-blue-600 hover:text-blue-800"
-                >
+                <Button variant="ghost" size="sm">
                   View <ExternalLink className="h-3 w-3 ml-1" />
                 </Button>
               </div>
 
-              <div className="flex items-center justify-between p-3 bg-amber-50 rounded-lg border border-amber-200">
+              <div className="flex items-center justify-between p-3 bg-accent/5 rounded-lg border border-accent/20">
                 <div className="flex items-center gap-3">
-                  <AlertCircle className="h-5 w-5 text-amber-600" />
+                  <AlertCircle className="h-5 w-5 text-accent-foreground" />
                   <div>
-                    <p className="text-sm font-medium text-amber-800">
+                    <p className="text-sm font-medium text-accent-foreground">
                       Poison Data Injection
                     </p>
-                    <p className="text-xs text-amber-600">
+                    <p className="text-xs text-accent-foreground/70">
                       Last updated 3 days ago
                     </p>
                   </div>
                 </div>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="text-amber-600 hover:text-amber-800"
-                >
+                <Button variant="ghost" size="sm">
                   Update
                 </Button>
               </div>
