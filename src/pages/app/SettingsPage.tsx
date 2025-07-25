@@ -4,21 +4,13 @@ import {
   Shield,
   CreditCard,
   Palette,
-  Globe,
   Lock,
-  Mail,
-  Phone,
-  MapPin,
-  Camera,
   Save,
   Trash2,
-  Eye,
-  EyeOff,
   Download,
   Upload,
   Settings as SettingsIcon,
   CheckCircle,
-  AlertTriangle,
 } from "lucide-react";
 import {
   Card,
@@ -28,11 +20,20 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
+import { useState } from "react";
 
 const SettingsPage = () => {
+  const [activeSection, setActiveSection] = useState("profile");
+
+  const scrollToSection = (sectionId: string) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth", block: "start" });
+      setActiveSection(sectionId);
+    }
+  };
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -47,42 +48,63 @@ const SettingsPage = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Settings Navigation */}
         <div className="space-y-2">
-          <Card>
-            <CardContent className="p-4">
-              <nav className="space-y-1">
-                <Button variant="secondary" className="w-full justify-start">
-                  <User className="h-4 w-4 mr-2" />
-                  Profile
-                </Button>
-                <Button variant="ghost" className="w-full justify-start">
-                  <Shield className="h-4 w-4 mr-2" />
-                  Privacy & Security
-                </Button>
-                <Button variant="ghost" className="w-full justify-start">
-                  <Bell className="h-4 w-4 mr-2" />
-                  Notifications
-                </Button>
-                <Button variant="ghost" className="w-full justify-start">
-                  <CreditCard className="h-4 w-4 mr-2" />
-                  Billing
-                </Button>
-                <Button variant="ghost" className="w-full justify-start">
-                  <Palette className="h-4 w-4 mr-2" />
-                  Portfolio Settings
-                </Button>
-                <Button variant="ghost" className="w-full justify-start">
-                  <SettingsIcon className="h-4 w-4 mr-2" />
-                  Commission Settings
-                </Button>
-              </nav>
-            </CardContent>
-          </Card>
+          <div className="sticky top-6">
+            <Card>
+              <CardContent className="p-4">
+                <nav className="space-y-1">
+                  <Button
+                    variant={
+                      activeSection === "profile" ? "secondary" : "ghost"
+                    }
+                    className="w-full justify-start"
+                    onClick={() => scrollToSection("profile")}
+                  >
+                    <User className="h-4 w-4 mr-2" />
+                    Profile
+                  </Button>
+                  <Button
+                    variant={
+                      activeSection === "privacy-security"
+                        ? "secondary"
+                        : "ghost"
+                    }
+                    className="w-full justify-start"
+                    onClick={() => scrollToSection("privacy-security")} // Fix this
+                  >
+                    <Shield className="h-4 w-4 mr-2" />
+                    Privacy & Security
+                  </Button>
+                  <Button
+                    variant={
+                      activeSection === "ai-protection" ? "secondary" : "ghost"
+                    }
+                    className="w-full justify-start"
+                    onClick={() => scrollToSection("ai-protection")} // Fix this
+                  >
+                    <Shield className="h-4 w-4 mr-2" />{" "}
+                    {/* Change icon from User to Shield */}
+                    AI Protection
+                  </Button>
+                  <Button
+                    variant={
+                      activeSection === "notifications" ? "secondary" : "ghost"
+                    }
+                    className="w-full justify-start"
+                    onClick={() => scrollToSection("notifications")} // Fix this
+                  >
+                    <Bell className="h-4 w-4 mr-2" />
+                    Notifications
+                  </Button>
+                </nav>
+              </CardContent>
+            </Card>
+          </div>
         </div>
 
         {/* Main Settings Content */}
         <div className="lg:col-span-2 space-y-6">
           {/* Profile Settings */}
-          <Card>
+          <Card id="profile">
             <CardHeader>
               <CardTitle>Profile Information</CardTitle>
               <CardDescription>
@@ -173,7 +195,7 @@ const SettingsPage = () => {
           </Card>
 
           {/* Privacy & Security */}
-          <Card>
+          <Card id="privacy-security">
             <CardHeader>
               <CardTitle>Privacy & Security</CardTitle>
               <CardDescription>
@@ -253,7 +275,7 @@ const SettingsPage = () => {
           </Card>
 
           {/* AI Protection Settings */}
-          <Card>
+          <Card id="ai-protection">
             <CardHeader>
               <CardTitle>AI Protection</CardTitle>
               <CardDescription>
@@ -333,7 +355,7 @@ const SettingsPage = () => {
           </Card>
 
           {/* Notification Settings */}
-          <Card>
+          <Card id="notifications">
             <CardHeader>
               <CardTitle>Notifications</CardTitle>
               <CardDescription>
