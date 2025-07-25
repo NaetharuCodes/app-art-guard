@@ -11,6 +11,7 @@ interface AddArtworkModalProps {
   selectedPosition: number | null;
   availableArtworks: Artwork[];
   onArtworkAdded: () => void;
+  uploadOnly?: boolean;
 }
 
 export const AddArtworkModal = ({
@@ -19,10 +20,14 @@ export const AddArtworkModal = ({
   selectedPosition,
   availableArtworks,
   onArtworkAdded,
+  uploadOnly = false,
 }: AddArtworkModalProps) => {
-  const [modalTab, setModalTab] = useState<"existing" | "upload">("existing");
+  const [modalTab, setModalTab] = useState<"existing" | "upload">(
+    uploadOnly ? "upload" : "existing"
+  );
   const [isUploading, setIsUploading] = useState(false);
   const [isAdding, setIsAdding] = useState(false);
+  const [error, setError] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Upload form state
@@ -44,6 +49,7 @@ export const AddArtworkModal = ({
       handleClose();
     } catch (error) {
       console.error("Error adding to portfolio:", error);
+      setError("Failed to add artwork to portfolio");
     } finally {
       setIsAdding(false);
     }
@@ -51,12 +57,15 @@ export const AddArtworkModal = ({
 
   const handleUploadNewArtwork = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!selectedPosition) return;
-
     const file = fileInputRef.current?.files?.[0];
-    if (!file) return;
+    if (!file) {
+      setError("Please select a file to upload");
+      return;
+    }
 
     setIsUploading(true);
+    setError("");
+
     const formData = new FormData();
     formData.append("file", file);
     formData.append("title", uploadForm.title || file.name);
@@ -69,17 +78,24 @@ export const AddArtworkModal = ({
       // Upload the artwork
       const uploadResponse = await artworkService.upload(formData);
 
-      // Add it to the portfolio
-      await portfolioService.addToPortfolio(
-        uploadResponse.artwork.id,
-        selectedPosition
-      );
+      if (uploadOnly) {
+        // If upload only, just notify of the upload success
+        onArtworkAdded();
+      } else {
+        // If portfolio mode, add it to the portfolio
+        if (selectedPosition) {
+          await portfolioService.addToPortfolio(
+            uploadResponse.artwork.id,
+            selectedPosition
+          );
+        }
+        onArtworkAdded();
+      }
 
-      // Notify parent to refresh data
-      onArtworkAdded();
       handleClose();
     } catch (error) {
-      console.error("Error uploading and adding to portfolio:", error);
+      console.error("Error uploading artwork:", error);
+      setError(error instanceof Error ? error.message : "Upload failed");
     } finally {
       setIsUploading(false);
     }
@@ -93,15 +109,32 @@ export const AddArtworkModal = ({
       tags: "",
       aiProtection: false,
     });
+    setError("");
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
   };
 
   const handleClose = () => {
-    resetUploadForm();
-    setModalTab("existing");
-    onClose();
+    if (!isUploading && !isAdding) {
+      resetUploadForm();
+      setModalTab(uploadOnly ? "upload" : "existing");
+      onClose();
+    }
+  };
+
+  const getModalTitle = () => {
+    if (uploadOnly) {
+      return "Upload New Artwork";
+    }
+    return `Add Artwork to Position ${selectedPosition}`;
+  };
+
+  const getModalDescription = () => {
+    if (uploadOnly) {
+      return "Upload your artwork to automatically register copyright and enable protection";
+    }
+    return "Choose an existing artwork or upload a new one";
   };
 
   if (!isOpen) return null;
@@ -109,48 +142,187 @@ export const AddArtworkModal = ({
   return (
     <>
       {/* Modal */}
-      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div className="fixed inset-0 modal-backdrop flex items-center justify-center z-50">
         <Card className="w-full max-w-4xl max-h-[90vh] overflow-hidden">
           <div className="flex items-center justify-between p-6 border-b border-border">
             <div>
               <h2 className="text-xl font-bold text-foreground">
-                Add Artwork to Position {selectedPosition}
+                {getModalTitle()}
               </h2>
               <p className="text-sm text-muted-foreground">
-                Choose an existing artwork or upload a new one
+                {getModalDescription()}
               </p>
             </div>
-            <Button variant="ghost" size="sm" onClick={handleClose}>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleClose}
+              disabled={isUploading || isAdding}
+            >
               <X className="h-4 w-4" />
             </Button>
           </div>
 
-          {/* Tabs */}
-          <div className="flex border-b border-border">
-            <button
-              className={`px-6 py-3 text-sm font-medium transition-colors ${
-                modalTab === "existing"
-                  ? "border-b-2 border-primary text-primary"
-                  : "text-muted-foreground hover:text-foreground"
-              }`}
-              onClick={() => setModalTab("existing")}
-            >
-              Choose Existing ({availableArtworks.length})
-            </button>
-            <button
-              className={`px-6 py-3 text-sm font-medium transition-colors ${
-                modalTab === "upload"
-                  ? "border-b-2 border-primary text-primary"
-                  : "text-muted-foreground hover:text-foreground"
-              }`}
-              onClick={() => setModalTab("upload")}
-            >
-              Upload New
-            </button>
-          </div>
+          {/* Tabs - only show if not uploadOnly */}
+          {!uploadOnly && (
+            <div className="flex border-b border-border">
+              <button
+                className={`px-6 py-3 text-sm font-medium transition-colors ${
+                  modalTab === "existing"
+                    ? "border-b-2 border-primary text-primary"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+                onClick={() => setModalTab("existing")}
+              >
+                Choose Existing ({availableArtworks.length})
+              </button>
+              <button
+                className={`px-6 py-3 text-sm font-medium transition-colors ${
+                  modalTab === "upload"
+                    ? "border-b-2 border-primary text-primary"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+                onClick={() => setModalTab("upload")}
+              >
+                Upload New
+              </button>
+            </div>
+          )}
 
           <div className="p-6 overflow-y-auto max-h-[60vh]">
-            {modalTab === "existing" ? (
+            {/* Error message */}
+            {error && (
+              <div className="p-3 text-sm text-red-600 bg-red-50 border border-red-200 rounded-md mb-4">
+                {error}
+              </div>
+            )}
+
+            {uploadOnly || modalTab === "upload" ? (
+              <form onSubmit={handleUploadNewArtwork} className="space-y-4">
+                <div>
+                  <label className="text-sm font-medium text-foreground mb-2 block">
+                    Select File
+                  </label>
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/*"
+                    required
+                    className="w-full px-3 py-2 border border-border rounded-md bg-background text-foreground"
+                    disabled={isUploading}
+                  />
+                </div>
+
+                <div>
+                  <label className="text-sm font-medium text-foreground mb-2 block">
+                    Title
+                  </label>
+                  <Input
+                    value={uploadForm.title}
+                    onChange={(e) =>
+                      setUploadForm({ ...uploadForm, title: e.target.value })
+                    }
+                    placeholder="Leave blank to use filename"
+                    disabled={isUploading}
+                  />
+                </div>
+
+                <div>
+                  <label className="text-sm font-medium text-foreground mb-2 block">
+                    Description
+                  </label>
+                  <textarea
+                    value={uploadForm.description}
+                    onChange={(e) =>
+                      setUploadForm({
+                        ...uploadForm,
+                        description: e.target.value,
+                      })
+                    }
+                    className="w-full min-h-[80px] px-3 py-2 border border-border rounded-md bg-background text-foreground"
+                    placeholder="Describe your artwork..."
+                    disabled={isUploading}
+                  />
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-sm font-medium text-foreground mb-2 block">
+                      Software Used
+                    </label>
+                    <Input
+                      value={uploadForm.software}
+                      onChange={(e) =>
+                        setUploadForm({
+                          ...uploadForm,
+                          software: e.target.value,
+                        })
+                      }
+                      placeholder="e.g., Photoshop"
+                      disabled={isUploading}
+                    />
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium text-foreground mb-2 block">
+                      Tags
+                    </label>
+                    <Input
+                      value={uploadForm.tags}
+                      onChange={(e) =>
+                        setUploadForm({ ...uploadForm, tags: e.target.value })
+                      }
+                      placeholder="e.g., portrait, digital"
+                      disabled={isUploading}
+                    />
+                  </div>
+                </div>
+
+                <div className="flex items-center space-x-2">
+                  <input
+                    id="aiProtection"
+                    type="checkbox"
+                    checked={uploadForm.aiProtection}
+                    onChange={(e) =>
+                      setUploadForm({
+                        ...uploadForm,
+                        aiProtection: e.target.checked,
+                      })
+                    }
+                    className="h-4 w-4 rounded border border-border text-primary focus:ring-primary"
+                    disabled={isUploading}
+                  />
+                  <label
+                    htmlFor="aiProtection"
+                    className="text-sm text-foreground"
+                  >
+                    Enable AI protection
+                  </label>
+                </div>
+
+                <div className="flex gap-3 pt-4">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={handleClose}
+                    className="flex-1"
+                    disabled={isUploading}
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    type="submit"
+                    disabled={isUploading}
+                    className="flex-1"
+                  >
+                    {isUploading
+                      ? "Uploading..."
+                      : uploadOnly
+                      ? "Upload Artwork"
+                      : "Upload & Add to Portfolio"}
+                  </Button>
+                </div>
+              </form>
+            ) : (
               <div>
                 {availableArtworks.length === 0 ? (
                   <div className="text-center py-8">
@@ -195,145 +367,34 @@ export const AddArtworkModal = ({
                   </div>
                 )}
               </div>
-            ) : (
-              <form onSubmit={handleUploadNewArtwork} className="space-y-4">
-                <div>
-                  <label className="text-sm font-medium text-foreground mb-2 block">
-                    Select File
-                  </label>
-                  <input
-                    ref={fileInputRef}
-                    type="file"
-                    accept="image/*"
-                    required
-                    className="w-full px-3 py-2 border border-border rounded-md bg-background text-foreground"
-                  />
-                </div>
+            )}
+          </div>
 
-                <div>
-                  <label className="text-sm font-medium text-foreground mb-2 block">
-                    Title
-                  </label>
-                  <Input
-                    value={uploadForm.title}
-                    onChange={(e) =>
-                      setUploadForm({ ...uploadForm, title: e.target.value })
-                    }
-                    placeholder="Leave blank to use filename"
-                  />
-                </div>
-
-                <div>
-                  <label className="text-sm font-medium text-foreground mb-2 block">
-                    Description
-                  </label>
-                  <textarea
-                    value={uploadForm.description}
-                    onChange={(e) =>
-                      setUploadForm({
-                        ...uploadForm,
-                        description: e.target.value,
-                      })
-                    }
-                    className="w-full min-h-[80px] px-3 py-2 border border-border rounded-md bg-background text-foreground"
-                    placeholder="Describe your artwork..."
-                  />
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="text-sm font-medium text-foreground mb-2 block">
-                      Software Used
-                    </label>
-                    <Input
-                      value={uploadForm.software}
-                      onChange={(e) =>
-                        setUploadForm({
-                          ...uploadForm,
-                          software: e.target.value,
-                        })
-                      }
-                      placeholder="e.g., Photoshop"
-                    />
-                  </div>
-                  <div>
-                    <label className="text-sm font-medium text-foreground mb-2 block">
-                      Tags
-                    </label>
-                    <Input
-                      value={uploadForm.tags}
-                      onChange={(e) =>
-                        setUploadForm({ ...uploadForm, tags: e.target.value })
-                      }
-                      placeholder="e.g., portrait, digital"
-                    />
-                  </div>
-                </div>
-
-                <div className="flex items-center space-x-2">
-                  <input
-                    id="aiProtection"
-                    type="checkbox"
-                    checked={uploadForm.aiProtection}
-                    onChange={(e) =>
-                      setUploadForm({
-                        ...uploadForm,
-                        aiProtection: e.target.checked,
-                      })
-                    }
-                    className="h-4 w-4 rounded border border-border text-primary focus:ring-primary"
-                  />
-                  <label
-                    htmlFor="aiProtection"
-                    className="text-sm text-foreground"
-                  >
-                    Enable AI protection
-                  </label>
-                </div>
-
-                <div className="flex gap-3 pt-4">
+          {/* Footer - only show for existing tab when not uploadOnly */}
+          {!uploadOnly &&
+            modalTab === "existing" &&
+            availableArtworks.length > 0 && (
+              <div className="p-6 border-t border-border">
+                <div className="flex gap-3">
                   <Button
-                    type="button"
                     variant="outline"
                     onClick={handleClose}
                     className="flex-1"
+                    disabled={isAdding}
                   >
                     Cancel
                   </Button>
                   <Button
-                    type="submit"
-                    disabled={isUploading}
+                    variant="outline"
+                    onClick={() => setModalTab("upload")}
                     className="flex-1"
+                    disabled={isAdding}
                   >
-                    {isUploading
-                      ? "Uploading & Adding..."
-                      : "Upload & Add to Portfolio"}
+                    Upload New Instead
                   </Button>
                 </div>
-              </form>
-            )}
-          </div>
-
-          {modalTab === "existing" && availableArtworks.length > 0 && (
-            <div className="p-6 border-t border-border">
-              <div className="flex gap-3">
-                <Button
-                  variant="outline"
-                  onClick={handleClose}
-                  className="flex-1"
-                >
-                  Cancel
-                </Button>
-                <Button
-                  variant="outline"
-                  onClick={() => setModalTab("upload")}
-                  className="flex-1"
-                >
-                  Upload New Instead
-                </Button>
               </div>
-            </div>
-          )}
+            )}
         </Card>
       </div>
 

@@ -3,7 +3,6 @@ import {
   Upload,
   FileText,
   Calendar,
-  Hash,
   Filter,
   Download,
   Eye,
@@ -12,7 +11,6 @@ import {
   Clock,
   ImageIcon,
   MoreHorizontal,
-  X,
 } from "lucide-react";
 import {
   Card,
@@ -24,25 +22,15 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { artworkService, type Artwork } from "@/services/api";
+import { AddArtworkModal } from "@/components/modals/AddArtworkModal";
 
 const CopyrightPage = () => {
   const [artworks, setArtworks] = useState<Artwork[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [isUploading, setIsUploading] = useState(false);
   const [showUploadModal, setShowUploadModal] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
-  const fileInputRef = useRef<HTMLInputElement>(null);
-
-  // Form state for upload
-  const [uploadForm, setUploadForm] = useState({
-    title: "",
-    description: "",
-    software: "",
-    tags: "",
-    aiProtection: false,
-  });
 
   useEffect(() => {
     fetchArtworks();
@@ -59,47 +47,8 @@ const CopyrightPage = () => {
     }
   };
 
-  const handleFileUpload = async (file: File) => {
-    setIsUploading(true);
-    const formData = new FormData();
-    formData.append("file", file);
-    formData.append("title", uploadForm.title || file.name);
-    formData.append("description", uploadForm.description);
-    formData.append("software", uploadForm.software);
-    formData.append("tags", uploadForm.tags);
-    formData.append("ai_protection", uploadForm.aiProtection.toString());
-
-    try {
-      const data = await artworkService.upload(formData);
-      setArtworks((prev) => [data.artwork, ...prev]);
-      setShowUploadModal(false);
-      resetUploadForm();
-    } catch (error) {
-      console.error("Error uploading file:", error);
-    } finally {
-      setIsUploading(false);
-    }
-  };
-
-  const resetUploadForm = () => {
-    setUploadForm({
-      title: "",
-      description: "",
-      software: "",
-      tags: "",
-      aiProtection: false,
-    });
-    if (fileInputRef.current) {
-      fileInputRef.current.value = "";
-    }
-  };
-
-  const handleUploadSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    const file = fileInputRef.current?.files?.[0];
-    if (file) {
-      handleFileUpload(file);
-    }
+  const handleArtworkUploaded = () => {
+    fetchArtworks(); // Refresh the artworks list
   };
 
   const formatFileSize = (bytes: number) => {
@@ -108,32 +57,6 @@ const CopyrightPage = () => {
     const sizes = ["Bytes", "KB", "MB", "GB"];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
-  };
-
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "protected":
-        return "bg-green-100 text-green-700 border-green-200";
-      case "processing":
-        return "bg-yellow-100 text-yellow-700 border-yellow-200";
-      case "warning":
-        return "bg-red-100 text-red-700 border-red-200";
-      default:
-        return "bg-gray-100 text-gray-700 border-gray-200";
-    }
-  };
-
-  const getStatusIcon = (status: string) => {
-    switch (status) {
-      case "protected":
-        return <CheckCircle className="h-4 w-4" />;
-      case "processing":
-        return <Clock className="h-4 w-4" />;
-      case "warning":
-        return <AlertTriangle className="h-4 w-4" />;
-      default:
-        return <FileText className="h-4 w-4" />;
-    }
   };
 
   const filteredArtworks = artworks.filter(
@@ -230,145 +153,6 @@ const CopyrightPage = () => {
           </CardContent>
         </Card>
       </div>
-
-      {/* Upload Modal */}
-      {showUploadModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <Card className="w-full max-w-lg">
-            <CardHeader>
-              <div className="flex items-center justify-between">
-                <CardTitle>Upload New Artwork</CardTitle>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => setShowUploadModal(false)}
-                >
-                  <X className="h-4 w-4" />
-                </Button>
-              </div>
-              <CardDescription>
-                Upload your artwork to automatically register copyright and
-                enable protection
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <form onSubmit={handleUploadSubmit} className="space-y-4">
-                <div>
-                  <label className="text-sm font-medium text-foreground mb-2 block">
-                    Select File
-                  </label>
-                  <input
-                    ref={fileInputRef}
-                    type="file"
-                    accept="image/*"
-                    required
-                    className="w-full px-3 py-2 border border-border rounded-md bg-background text-foreground"
-                  />
-                </div>
-
-                <div>
-                  <label className="text-sm font-medium text-foreground mb-2 block">
-                    Title
-                  </label>
-                  <Input
-                    value={uploadForm.title}
-                    onChange={(e) =>
-                      setUploadForm({ ...uploadForm, title: e.target.value })
-                    }
-                    placeholder="Leave blank to use filename"
-                  />
-                </div>
-
-                <div>
-                  <label className="text-sm font-medium text-foreground mb-2 block">
-                    Description
-                  </label>
-                  <textarea
-                    value={uploadForm.description}
-                    onChange={(e) =>
-                      setUploadForm({
-                        ...uploadForm,
-                        description: e.target.value,
-                      })
-                    }
-                    className="w-full min-h-[80px] px-3 py-2 border border-border rounded-md bg-background text-foreground"
-                    placeholder="Describe your artwork..."
-                  />
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="text-sm font-medium text-foreground mb-2 block">
-                      Software Used
-                    </label>
-                    <Input
-                      value={uploadForm.software}
-                      onChange={(e) =>
-                        setUploadForm({
-                          ...uploadForm,
-                          software: e.target.value,
-                        })
-                      }
-                      placeholder="e.g., Photoshop"
-                    />
-                  </div>
-                  <div>
-                    <label className="text-sm font-medium text-foreground mb-2 block">
-                      Tags
-                    </label>
-                    <Input
-                      value={uploadForm.tags}
-                      onChange={(e) =>
-                        setUploadForm({ ...uploadForm, tags: e.target.value })
-                      }
-                      placeholder="e.g., portrait, digital"
-                    />
-                  </div>
-                </div>
-
-                <div className="flex items-center space-x-2">
-                  <input
-                    id="aiProtection"
-                    type="checkbox"
-                    checked={uploadForm.aiProtection}
-                    onChange={(e) =>
-                      setUploadForm({
-                        ...uploadForm,
-                        aiProtection: e.target.checked,
-                      })
-                    }
-                    className="h-4 w-4 rounded border border-border text-primary focus:ring-primary"
-                  />
-                  <label
-                    htmlFor="aiProtection"
-                    className="text-sm text-foreground"
-                  >
-                    Enable AI protection
-                  </label>
-                </div>
-
-                <div className="flex gap-3 pt-4">
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={() => setShowUploadModal(false)}
-                    className="flex-1"
-                  >
-                    Cancel
-                  </Button>
-                  <Button
-                    type="submit"
-                    disabled={isUploading}
-                    className="flex-1"
-                  >
-                    {isUploading ? "Uploading..." : "Upload"}
-                  </Button>
-                </div>
-              </form>
-            </CardContent>
-          </Card>
-        </div>
-      )}
 
       {/* Search and Filter */}
       <div className="flex flex-col sm:flex-row gap-4">
@@ -554,6 +338,16 @@ const CopyrightPage = () => {
           </CardContent>
         </Card>
       )}
+
+      {/* Upload Modal */}
+      <AddArtworkModal
+        isOpen={showUploadModal}
+        onClose={() => setShowUploadModal(false)}
+        selectedPosition={null}
+        availableArtworks={[]}
+        onArtworkAdded={handleArtworkUploaded}
+        uploadOnly={true}
+      />
     </div>
   );
 };

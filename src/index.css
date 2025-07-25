@@ -5,6 +5,22 @@ button {
   cursor: pointer;
 }
 
+.modal-backdrop {
+  backdrop-filter: blur(8px);
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.modal-backdrop-dark {
+  backdrop-filter: blur(12px);
+  background: rgba(0, 0, 0, 0.6);
+}
+
+/* For fullscreen modals like artwork viewer */
+.modal-backdrop-fullscreen {
+  backdrop-filter: blur(4px);
+  background: rgba(0, 0, 0, 0.8);
+}
+
 :root {
   --background: rgb(246, 230, 238);
   --foreground: rgb(91, 91, 91);

@@ -18,6 +18,8 @@ import {
   type Portfolio,
 } from "@/services/api";
 import { AddArtworkModal } from "@/components/modals/AddArtworkModal";
+import { FullScreenArtworkModal } from "@/components/modals/FullScreenArtworkModal";
+import { ConfirmDeleteModal } from "@/components/modals/ConfirmDeleteModal";
 
 const PortfolioPage = () => {
   const [portfolioItems, setPortfolioItems] = useState<Portfolio[]>([]);
@@ -25,6 +27,13 @@ const PortfolioPage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [showAddModal, setShowAddModal] = useState(false);
   const [selectedPosition, setSelectedPosition] = useState<number | null>(null);
+  const [fullScreenArtwork, setFullScreenArtwork] = useState<Artwork | null>(
+    null
+  );
+  const [fullScreenIndex, setFullScreenIndex] = useState(0);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [itemToDelete, setItemToDelete] = useState<Portfolio | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
     fetchPortfolioData();
@@ -45,6 +54,41 @@ const PortfolioPage = () => {
     }
   };
 
+  const getPortfolioArtworks = (): Artwork[] => {
+    return portfolioItems
+      .sort((a, b) => a.position - b.position)
+      .map((item) => item.artwork);
+  };
+
+  const handleViewFullScreen = (artwork: Artwork) => {
+    const portfolioArtworks = getPortfolioArtworks();
+    const index = portfolioArtworks.findIndex((a) => a.id === artwork.id);
+    setFullScreenIndex(index);
+    setFullScreenArtwork(artwork);
+  };
+
+  const handleFullScreenNavigate = (direction: "prev" | "next") => {
+    const portfolioArtworks = getPortfolioArtworks();
+    let newIndex = fullScreenIndex;
+
+    if (direction === "prev" && newIndex > 0) {
+      newIndex -= 1;
+    } else if (
+      direction === "next" &&
+      newIndex < portfolioArtworks.length - 1
+    ) {
+      newIndex += 1;
+    }
+
+    setFullScreenIndex(newIndex);
+    setFullScreenArtwork(portfolioArtworks[newIndex]);
+  };
+
+  const handleCloseFullScreen = () => {
+    setFullScreenArtwork(null);
+    setFullScreenIndex(0);
+  };
+
   const handleAddArtworkClick = (position: number) => {
     setSelectedPosition(position);
     setShowAddModal(true);
@@ -57,6 +101,40 @@ const PortfolioPage = () => {
 
   const handleArtworkAdded = () => {
     fetchPortfolioData(); // Refresh data
+  };
+
+  const handleEditSlot = (position: number) => {
+    setSelectedPosition(position);
+    setShowAddModal(true);
+  };
+
+  const handleDeleteClick = (portfolioItem: Portfolio) => {
+    setItemToDelete(portfolioItem);
+    setShowDeleteModal(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!itemToDelete) return;
+
+    setIsDeleting(true);
+    try {
+      await portfolioService.removeFromPortfolio(itemToDelete.id);
+      fetchPortfolioData();
+      setShowDeleteModal(false);
+      setItemToDelete(null);
+    } catch (error) {
+      console.error("Error removing from portfolio:", error);
+      // You might want to show a toast notification here
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
+  const handleCloseDeleteModal = () => {
+    if (!isDeleting) {
+      setShowDeleteModal(false);
+      setItemToDelete(null);
+    }
   };
 
   // Filter out artworks already in portfolio
@@ -202,6 +280,9 @@ const PortfolioPage = () => {
                         size="sm"
                         variant="secondary"
                         className="h-8 w-8 p-0"
+                        onClick={() =>
+                          handleViewFullScreen(portfolioItem.artwork)
+                        }
                       >
                         <Eye className="h-4 w-4" />
                       </Button>
@@ -209,6 +290,7 @@ const PortfolioPage = () => {
                         size="sm"
                         variant="secondary"
                         className="h-8 w-8 p-0"
+                        onClick={() => handleEditSlot(portfolioItem.position)}
                       >
                         <Edit3 className="h-4 w-4" />
                       </Button>
@@ -216,6 +298,7 @@ const PortfolioPage = () => {
                         size="sm"
                         variant="destructive"
                         className="h-8 w-8 p-0"
+                        onClick={() => handleDeleteClick(portfolioItem)}
                       >
                         <Trash2 className="h-4 w-4" />
                       </Button>
@@ -300,6 +383,21 @@ const PortfolioPage = () => {
         selectedPosition={selectedPosition}
         availableArtworks={availableForPortfolio}
         onArtworkAdded={handleArtworkAdded}
+      />
+      <FullScreenArtworkModal
+        isOpen={!!fullScreenArtwork}
+        onClose={handleCloseFullScreen}
+        artwork={fullScreenArtwork}
+        allArtworks={getPortfolioArtworks()}
+        currentIndex={fullScreenIndex}
+        onNavigate={handleFullScreenNavigate}
+      />
+      <ConfirmDeleteModal
+        isOpen={showDeleteModal}
+        onClose={handleCloseDeleteModal}
+        onConfirm={handleConfirmDelete}
+        artwork={itemToDelete?.artwork || null}
+        isDeleting={isDeleting}
       />
     </div>
   );
