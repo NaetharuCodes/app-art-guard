@@ -10,7 +10,6 @@ import {
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { useEffect, useState } from "react";
 import {
   artworkService,
@@ -18,11 +17,14 @@ import {
   type Artwork,
   type Portfolio,
 } from "@/services/api";
+import { AddArtworkModal } from "@/components/modals/AddArtworkModal";
 
 const PortfolioPage = () => {
   const [portfolioItems, setPortfolioItems] = useState<Portfolio[]>([]);
   const [availableArtworks, setAvailableArtworks] = useState<Artwork[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [selectedPosition, setSelectedPosition] = useState<number | null>(null);
 
   useEffect(() => {
     fetchPortfolioData();
@@ -42,6 +44,26 @@ const PortfolioPage = () => {
       setIsLoading(false);
     }
   };
+
+  const handleAddArtworkClick = (position: number) => {
+    setSelectedPosition(position);
+    setShowAddModal(true);
+  };
+
+  const handleModalClose = () => {
+    setShowAddModal(false);
+    setSelectedPosition(null);
+  };
+
+  const handleArtworkAdded = () => {
+    fetchPortfolioData(); // Refresh data
+  };
+
+  // Filter out artworks already in portfolio
+  const portfolioArtworkIds = portfolioItems.map((item) => item.artwork_id);
+  const availableForPortfolio = availableArtworks.filter(
+    (artwork) => !portfolioArtworkIds.includes(artwork.id)
+  );
 
   if (isLoading) {
     return (
@@ -138,7 +160,9 @@ const PortfolioPage = () => {
             <p className="text-muted-foreground mb-4">
               Upload a new piece to showcase your skills and artistic range
             </p>
-            <Button>
+            <Button
+              onClick={() => handleAddArtworkClick(portfolioItems.length + 1)}
+            >
               <Plus className="h-4 w-4 mr-2" />
               Upload Artwork
             </Button>
@@ -254,7 +278,11 @@ const PortfolioPage = () => {
                     <p className="text-sm text-muted-foreground mb-3">
                       Position {position}
                     </p>
-                    <Button variant="outline" size="sm">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleAddArtworkClick(position)}
+                    >
                       Add Artwork
                     </Button>
                   </div>
@@ -264,6 +292,15 @@ const PortfolioPage = () => {
           }
         })}
       </div>
+
+      {/* Add Artwork Modal */}
+      <AddArtworkModal
+        isOpen={showAddModal}
+        onClose={handleModalClose}
+        selectedPosition={selectedPosition}
+        availableArtworks={availableForPortfolio}
+        onArtworkAdded={handleArtworkAdded}
+      />
     </div>
   );
 };

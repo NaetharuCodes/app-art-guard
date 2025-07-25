@@ -9,7 +9,7 @@ import {
   LogOut,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { ThemeSwitcher } from "../ThemeSwitcher";
+import { ThemeSwitcher } from "../theme/ThemeSwitcher";
 import { useAuth } from "@/contexts/AuthContext";
 
 const navigation = [
