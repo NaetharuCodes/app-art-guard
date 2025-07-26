@@ -22,6 +22,7 @@ import SettingsPage from "./pages/app/SettingsPage";
 import { ProtectedRoute } from "./components/auth/ProtectedRoute";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import { AuthProvider } from "./contexts/AuthContext";
+import CommissionFlowBuilderPage from "./pages/app/CommissionFlowBuilderPage";
 
 function App() {
   return (
@@ -51,6 +52,10 @@ function App() {
                 <Route
                   path="commission-flow"
                   element={<CommissionFlowPage />}
+                />
+                <Route
+                  path="commission-flow-builder"
+                  element={<CommissionFlowBuilderPage />}
                 />
                 <Route path="settings" element={<SettingsPage />} />
               </Route>

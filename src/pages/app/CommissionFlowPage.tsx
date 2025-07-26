@@ -14,6 +14,7 @@ import {
   User,
   Image,
   Download,
+  CogIcon,
 } from "lucide-react";
 import {
   Card,
@@ -25,6 +26,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
+import { Link, Navigate } from "react-router-dom";
+import { cn } from "@/lib/utils";
 
 // Mock pricing data
 const pricingTiers = [
@@ -158,10 +161,15 @@ const CommissionFlowPage = () => {
             relationships
           </p>
         </div>
-        <Button>
-          <Settings className="h-4 w-4 mr-2" />
-          Configure Process
-        </Button>
+        <Link
+          to="/app/commission-flow-builder"
+          className={cn(
+            "group items-center px-2 py-2 text-sm font-medium rounded-md bg-primary text-secondary flex gap-2"
+          )}
+        >
+          <CogIcon />
+          Configure Flow
+        </Link>
       </div>
 
       {/* Stats Overview */}
